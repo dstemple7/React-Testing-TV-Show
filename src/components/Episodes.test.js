@@ -1,9 +1,8 @@
 import React from 'react'
 import Episodes from './Episodes'
-import { render } from '@testing-library/react'
-import uuid from 'react-uuid'
+import { render, screen } from '@testing-library/react'
 
-const episodes = {
+const episodesData = {
   data: [
   {
   id: 2993,
@@ -611,5 +610,23 @@ test("renders w/o error", () => {
 })
 
 test("renders w/episodes w/o error", () => {
-  render(<Episodes episodes={[episodes]}/>)
+  render(<Episodes episodes={[episodesData]}/>)
+})
+
+test ('Displays episodes as the episodes prop is updating', () => {
+  const {rerender} = render(<Episodes episodes={[]} />)
+
+  //assert that with an empty array, no missions are rendered
+  expect(screen.queryByText(/season/i)).toBeNull()
+  expect(screen.queryAllByTestId('episodes')).toHaveLength(0)
+
+  // simulate that the missios prop has changed causing a component rerender
+  rerender(<Episodes episodes={[episodesData]} />)
+  // screen.debug()
+
+  // Make assertion(s) for your test
+  expect(screen.getByText(/season/i)).toBeInTheDocument()
+  expect(screen.getAllByTestId('episodes')).not.toHaveLength(0)
+
+  // TODO: add test for the error prop
 })
