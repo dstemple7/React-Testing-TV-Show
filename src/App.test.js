@@ -1,8 +1,7 @@
 import React from 'react'
-import {render, screen, waitFor} from '@testing-library/react'
+import {render, screen, fireEvent, waitFor} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import App from './App'
-
 
 const episodesData = {
   data: [
@@ -612,14 +611,11 @@ test("renders without error", () => {
 })
 
 test ('data is fetched and rendered correctly', async () => {
-  // mock the resolved value of fetchMissions
+  render(<App episodes={episodesData}/>)
   
-  render(<App />)
-  
-  // fireEvent.click(screen.getByText(/get data/i))
   userEvent.click(screen.getByText(/fetching/i))
   
   await waitFor(async () => {
-    await screen.findByText(/fetching/i)
+    await screen.findByText(/season/i)
   })
 })
